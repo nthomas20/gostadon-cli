@@ -6,7 +6,7 @@ import (
 	"os"
 	"strconv"
 
-	"github.com/nthomas20/gostadon-cli/logs/writer"
+	"github.com/nthomas20/gostadon-cli/app/logs/writer"
 
 	jsoniter "github.com/json-iterator/go"
 )

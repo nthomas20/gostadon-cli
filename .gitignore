@@ -22,6 +22,9 @@
 .vscode/
 __debug*
 
+# Ignore local bin directory
+/bin
+
 # Def don't store the .env file
 .env
 
