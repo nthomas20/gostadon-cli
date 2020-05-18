@@ -13,3 +13,18 @@
 
 # Dependency directories (remove the comment below to include it)
 # vendor/
+
+# Exclude directory navigation scripts
+.entryrc
+.exitrc
+
+# Custom IDE Settings
+.vscode/
+__debug*
+
+# Def don't store the .env file
+.env
+
+# Ignore logs directory
+/logs/
+*.log
