@@ -26,8 +26,9 @@ clean:
 
 # Generate and push changelog
 changelog:
+	git pull
 	git-chglog -o CHANGELOG.md
-	git commit -m "changelog" CHANGELOG.md
+	git commit -a -m "changelog"
 	git push
 	git push origin ${VERSION}
 
