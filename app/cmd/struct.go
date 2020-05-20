@@ -2,7 +2,7 @@ package cmd
 
 // ApplicationConfiguration : Application Configuration Information
 type ApplicationConfiguration struct {
-	ServerDomain string              `json:"domain"`
+	ServerDomain string              `json:"server"`
 	Name         string              `json:"app_name"`
 	Scopes       []string            `json:"scopes"`
 	Website      string              `json:"website"`

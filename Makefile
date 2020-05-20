@@ -1,5 +1,13 @@
 # This how we want to name the binary output
-BINARY=gostadon-cli
+BINARY_LINUX=gostadon-cli
+BINARY_WINDOWS=gostadon-cli.exe
+BINARY_MACOS=gostadon-darwin
+DESCRIPTOR_LINUX=Linux-amd64
+DESCRIPTOR_WINDOWS=Windows-amd64
+DESCRIPTOR_MACOS=MacOS
+
+RELEASE_TITLE=gostadon-cli
+RELEASE_MESSAGE=Go Client for encrypted messaging
 
 # These are the values we want to pass for VERSION and BUILD ( Semantic Versioning Recommended: https://semver.org/ )
 VERSION=`git describe --tags --abbrev=0`
@@ -7,6 +15,7 @@ BUILD=`date +%FT%T%z`
 
 # Setup the -ldflags option for go build here, interpolate the variable values
 LDFLAGS=-ldflags "-w -s -X main.version=${VERSION} -X main.buildDate=${BUILD}"
+LDFLAGS_HERE=-ldflags "-w -s -X main.version=${VERSION}-local -X main.buildDate=${BUILD}"
 
 # Builds the project ( https://www.digitalocean.com/community/tutorials/how-to-build-go-executables-for-multiple-platforms-on-ubuntu-16-04 )
 build:
@@ -16,13 +25,14 @@ build:
 
 # Installs our project: copies binaries
 install:
-	go install ${LDFLAGS}
+	# Use the "here" build version to presentationally disconnect this from an official build release
+	go install ${LDFLAGS_HERE}
 
 # Cleans our project: deletes binaries
 clean:
-	if [ -f bin/${BINARY} ] ; then rm bin/${BINARY} ; fi
-	if [ -f bin/${BINARY}.exe ] ; then rm bin/${BINARY}.exe ; fi
-	if [ -f bin/${BINARY}-darwin ] ; then rm bin/${BINARY}-darwin ; fi
+	if [ -f bin/${BINARY_LINUX} ] ; then rm bin/${BINARY_LINUX} ; fi
+	if [ -f bin/${BINARY_WINDOWS} ] ; then rm bin/${BINARY_WINDOWS} ; fi
+	if [ -f bin/${BINARY_MACOS} ] ; then rm bin/${BINARY_MACOS} ; fi
 
 # Generate and push changelog
 changelog:
@@ -34,6 +44,12 @@ changelog:
 
 # Pushes release of current tag including build artifact ( Requires https://github.com/github/hub )
 release:
-	hub release create -a "bin/${BINARY}#gostadon-cli (Linux-amd64)" -a "bin/${BINARY}.exe#gostadon-cli.exe (Windows-amd64)" -a "bin/${BINARY}-darwin#gostadon-cli-darwin (MacOS-amd64)" -m "gostadon-cli ${VERSION}" -m "Go Client for encrypted messaging" ${VERSION}
+	hub release create \
+		-a "bin/${BINARY_LINUX}#${BINARY_LINUX} (${DESCRIPTOR_LINUX})" \
+		-a "bin/${BINARY_WINDOWS}#${BINARY_WINDOWS} (${DESCRIPTOR_WINDOWS})" \
+		-a "bin/${BINARY_MACOS}#${BINARY_MACOS} (${DESCRIPTOR_MACOS})" \
+		-m "${RELEASE_TITLE} ${VERSION}" \
+		-m "${RELEASE_MESSAGE}" \
+		${VERSION}
 
-.PHONY: clean install
+.PHONY: clean build
