@@ -24,12 +24,15 @@ clean:
 	if [ -f bin/${BINARY}.exe ] ; then rm bin/${BINARY}.exe ; fi
 	if [ -f bin/${BINARY}-darwin ] ; then rm bin/${BINARY}-darwin ; fi
 
-# Pushes release of current tag including build artifact ( Requires https://github.com/github/hub )
-release:
+# Generate and push changelog
+changelog:
 	git-chglog -o CHANGELOG.md
 	git commit -m "changelog" CHANGELOG.md
 	git push
 	git push origin ${VERSION}
+
+# Pushes release of current tag including build artifact ( Requires https://github.com/github/hub )
+release:
 	hub release create -a "bin/${BINARY}#gostadon-cli (Linux-amd64)" -a "bin/${BINARY}.exe#gostadon-cli.exe (Windows-amd64)" -a "bin/${BINARY}-darwin#gostadon-cli-darwin (MacOS-amd64)" -m "gostadon-cli ${VERSION}" -m "Go Client for encrypted messaging" ${VERSION}
 
 .PHONY: clean install
