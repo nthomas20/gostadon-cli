@@ -15,9 +15,13 @@ var (
 	json = jsoniter.ConfigCompatibleWithStandardLibrary
 )
 
-// Register : Register a new app
-func Register(c *cli.Context) {
-	config := ApplicationConfiguration{}
+func register(c *cli.Context) error {
+	config := ApplicationConfiguration{
+		ServerDomain: c.String("server"),
+		Name:         c.String("name"),
+		Scopes:       strings.Split(c.String("scopes"), ","),
+		Website:      c.String("website"),
+	}
 
 	app, err := mastodon.RegisterApp(context.Background(), &mastodon.AppConfig{
 		Server:     config.ServerDomain,
@@ -36,5 +40,8 @@ func Register(c *cli.Context) {
 	jsonResponse, _ := json.Marshal(config)
 
 	// Output the entirety of information
-	fmt.Println(jsonResponse)
+	// TODO: Store this in a local configuration file?
+	fmt.Println(string(jsonResponse))
+
+	return nil
 }

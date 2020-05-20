@@ -1,8 +1,6 @@
 package cmd
 
 import (
-	"fmt"
-
 	"github.com/urfave/cli/v2"
 )
 
@@ -10,21 +8,31 @@ import (
 func Commands() []*cli.Command {
 	return []*cli.Command{
 		{
-			Name:    "complete",
-			Aliases: []string{"c"},
-			Usage:   "complete a task on the list",
-			Action: func(c *cli.Context) error {
-				fmt.Println("complete")
-				return nil
-			},
-		},
-		{
-			Name:    "add",
-			Aliases: []string{"a"},
-			Usage:   "add a task to the list",
-			Action: func(c *cli.Context) error {
-				fmt.Println("add")
-				return nil
+			Name:    "register",
+			Aliases: []string{"r"},
+			Usage:   "Register a new app with Mastodon",
+			Action:  register,
+			Flags: []cli.Flag{
+				&cli.StringFlag{
+					Name:  "server",
+					Value: "",
+					Usage: "server domain of instance (e.g. https://mastodon.social)",
+				},
+				&cli.StringFlag{
+					Name:  "name",
+					Value: "",
+					Usage: "client name (e.g. my-cool-app)",
+				},
+				&cli.StringFlag{
+					Name:  "website",
+					Value: "",
+					Usage: "app website (e.g. my-cool.app)",
+				},
+				&cli.StringFlag{
+					Name:  "scopes",
+					Value: "read,write,follow",
+					Usage: "app permissions",
+				},
 			},
 		},
 	}

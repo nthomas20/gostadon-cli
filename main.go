@@ -29,7 +29,7 @@ func main() {
 
 	app := &cli.App{
 		Name:  "gostadon-cli",
-		Usage: "Mastadon CLI Client",
+		Usage: "Mastadon CLI Client (written in Go)",
 		Action: func(c *cli.Context) error {
 			fmt.Println("No action specified. #cry")
 			return nil
