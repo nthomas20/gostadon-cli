@@ -1,7 +1,7 @@
 # This how we want to name the binary output
 BINARY=gostadon-cli
 
-# These are the values we want to pass for VERSION and BUILD
+# These are the values we want to pass for VERSION and BUILD ( Semantic Versioning Recommended: https://semver.org/ )
 VERSION=`git describe --tags --abbrev=0`
 BUILD=`date +%FT%T%z`
 
@@ -26,6 +26,10 @@ clean:
 
 # Pushes release of current tag including build artifact ( Requires https://github.com/github/hub )
 release:
+	git-chglog -o CHANGELOG.md
+	git commit -m 'changelog' CHANGELOG.md
+	git push
+	git push origin ${VERSION}
 	hub release create -a "bin/${BINARY}#gostadon-cli (Linux-amd64)" -a "bin/${BINARY}.exe#gostadon-cli.exe (Windows-amd64)" -a "bin/${BINARY}-darwin#gostadon-cli-darwin (MacOS-amd64)" -m "gostadon-cli ${VERSION}" -m "Go Client for encrypted messaging" ${VERSION}
 
 .PHONY: clean install
