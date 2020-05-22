@@ -1,5 +1,6 @@
 # This how we want to name the binary output
 BINARY_LINUX=gostadon-cli
+BINARY_SNAP=gostadon-cli
 BINARY_WINDOWS=gostadon-cli.exe
 BINARY_MACOS=gostadon-darwin
 DESCRIPTOR_LINUX=Linux-amd64
@@ -15,6 +16,7 @@ BUILD=`date +%FT%T%z`
 
 # Setup the -ldflags option for go build here, interpolate the variable values
 LDFLAGS=-ldflags "-w -s -X main.version=${VERSION} -X main.buildDate=${BUILD}"
+LDFLAGS_SNAP=-ldflags "-w -s -X main.version=${VERSION}-snap -X main.buildDate=${BUILD}"
 LDFLAGS_HERE=-ldflags "-w -s -X main.version=${VERSION}-local -X main.buildDate=${BUILD}"
 
 # Builds the project ( https://www.digitalocean.com/community/tutorials/how-to-build-go-executables-for-multiple-platforms-on-ubuntu-16-04 )
@@ -22,6 +24,9 @@ build:
 	env GOOS=linux GOARCH=amd64 go build ${LDFLAGS} -o bin/${BINARY}
 	env GOOS=windows GOARCH=amd64 go build ${LDFLAGS} -o bin/${BINARY}.exe
 	env GOOS=darwin GOARCH=amd64 go build ${LDFLAGS} -o bin/${BINARY}-darwin
+
+build-snap:
+	env GOOS=linux GOARCH=amd64 go build ${LDFLAGS_SNAP} -o bin/${BINARY_SNAP}
 
 # Installs our project: copies binaries
 install:
