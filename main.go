@@ -15,6 +15,8 @@ var (
 	buildDate string
 )
 
+// TODO: Check for SNAP_REVISION and SNAP_VERSION envvar to manage version output
+
 func main() {
 	commands := append(cmd.Commands(), &cli.Command{
 		Name:    "version",
