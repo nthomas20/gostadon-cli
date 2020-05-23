@@ -151,10 +151,12 @@ func removeApp(c *cli.Context) error {
 	// Load our configuration file
 	configuration.ReadConfiguration(config)
 
+	// Does the requested name exist in the config
 	if _, found := config.MastodonClient[name]; found == true {
+		// Delete it
 		delete(config.MastodonClient, name)
 
-		// Write it
+		// Write the configuration
 		if err := configuration.WriteConfiguration(config); err != nil {
 			return err
 		}
