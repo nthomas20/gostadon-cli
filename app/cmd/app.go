@@ -3,6 +3,7 @@ package cmd
 import (
 	"context"
 	"log"
+	"strconv"
 	"strings"
 
 	"github.com/nthomas20/gostadon-cli/app/configuration"
@@ -23,12 +24,33 @@ var (
 func storeConfiguration(app models.MastodonApplicationConfiguration) {
 	var (
 		config models.Configuration
+		name   = app.Name
+		found  bool
+		c      = 1
 	)
 
 	// Load our configuration file
 	configuration.ReadConfiguration(&config)
 
-	config.MastodonClient[app.Name] = app
+	// Make sure we're not overwriting an existing entry
+	for {
+		_, found = config.MastodonClient[name]
+
+		if found == true {
+			name = app.Name + "-" + strconv.Itoa(c)
+			c++
+		}
+
+		if found == false {
+			break
+		}
+	}
+
+	if name != app.Name {
+		log.Println("Duplicate name found, saving connection as", name)
+	}
+
+	config.MastodonClient[name] = app
 
 	configuration.WriteConfiguration(&config)
 }

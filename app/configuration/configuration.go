@@ -1,7 +1,6 @@
 package configuration
 
 import (
-	"fmt"
 	"io/ioutil"
 	"log"
 	"os"
@@ -44,8 +43,6 @@ func ReadConfiguration(config *models.Configuration) {
 	if validConfiguration == false {
 		log.Fatal("Invalid configuration")
 	}
-
-	fmt.Println(config)
 }
 
 // WriteConfiguration : Write a Configuration structure to disk
