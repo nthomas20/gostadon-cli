@@ -21,9 +21,9 @@ LDFLAGS_HERE=-ldflags "-w -s -X main.version=${VERSION}-local -X main.buildDate=
 
 # Builds the project ( https://www.digitalocean.com/community/tutorials/how-to-build-go-executables-for-multiple-platforms-on-ubuntu-16-04 )
 build:
-	env GOOS=linux GOARCH=amd64 go build ${LDFLAGS} -o bin/${BINARY}
-	env GOOS=windows GOARCH=amd64 go build ${LDFLAGS} -o bin/${BINARY}.exe
-	env GOOS=darwin GOARCH=amd64 go build ${LDFLAGS} -o bin/${BINARY}-darwin
+	env GOOS=linux GOARCH=amd64 go build ${LDFLAGS} -o bin/${BINARY_LINUX}
+	env GOOS=windows GOARCH=amd64 go build ${LDFLAGS} -o bin/${BINARY_WINDOWS}
+	env GOOS=darwin GOARCH=amd64 go build ${LDFLAGS} -o bin/${BINARY_MACOS}
 
 build-snap:
 	env GOOS=linux GOARCH=amd64 go build ${LDFLAGS_SNAP} -o bin/${BINARY_SNAP}
