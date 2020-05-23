@@ -1,6 +1,7 @@
 package models
 
 // Configuration : Configuration structure
+// Revision 1
 type Configuration struct {
 	Revision       int                                         `json:"revision"`
 	MastodonClient map[string]MastodonApplicationConfiguration `json:"mastodon_client"`
