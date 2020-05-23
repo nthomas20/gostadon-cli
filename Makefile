@@ -36,6 +36,7 @@ install:
 # Cleans our project: deletes binaries
 clean:
 	if [ -f bin/${BINARY_LINUX} ] ; then rm bin/${BINARY_LINUX} ; fi
+	if [ -f bin/${BINARY_SNAP} ] ; then rm bin/${BINARY_SNAP} ; fi
 	if [ -f bin/${BINARY_WINDOWS} ] ; then rm bin/${BINARY_WINDOWS} ; fi
 	if [ -f bin/${BINARY_MACOS} ] ; then rm bin/${BINARY_MACOS} ; fi
 
