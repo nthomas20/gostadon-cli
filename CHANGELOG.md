@@ -2,6 +2,7 @@
 ## [Unreleased]
 
 ### Features
+- **cli:** List and Remove config connections
 - **config:** Default base configuration
 - **config:** Increment mastadon connection postfix if duplicate
 - **config:** Read and Write configuration yaml
