@@ -1,6 +1,9 @@
 <a name="unreleased"></a>
 ## [Unreleased]
 
+### Features
+- **config:** Read and Write configuration yaml
+
 
 <a name="v0.0.3"></a>
 ## [v0.0.3] - 2020-05-22
