@@ -1,6 +1,6 @@
 package models
 
-// Configuration : Configuration structure
+// Configuration : Application Configuration File Sructure
 // Revision 1
 type Configuration struct {
 	Revision       int                                         `json:"revision"`
@@ -28,4 +28,15 @@ type LogConfiguration struct {
 	Filename string `json:"filename"`
 	MaxBytes int64  `json:"max_bytes"`
 	MaxFiles int    `json:"max_files"`
+}
+
+// AccountConfiguration : Account Configuration File Structure
+type AccountConfiguration struct {
+	Profiles map[string]ProfileConfiguration `json:"profile"`
+}
+
+// ProfileConfiguration : Account Profile Configuration
+type ProfileConfiguration struct {
+	Email    string `json:"email"`
+	Password string `json:"password"`
 }
