@@ -12,7 +12,7 @@ func Commands() []*cli.Command {
 			Name:    "register",
 			Aliases: []string{"r"},
 			Usage:   "Register a new app with Mastodon",
-			Action:  register,
+			Action:  registerApp,
 			Flags: []cli.Flag{
 				&cli.StringFlag{
 					Name:  "server",
@@ -38,7 +38,7 @@ func Commands() []*cli.Command {
 			Name:    "connect",
 			Aliases: []string{"r"},
 			Usage:   "Connect an existing app with Mastodon",
-			Action:  connect,
+			Action:  connectApp,
 			Flags: []cli.Flag{
 				&cli.StringFlag{
 					Name:  "server",
@@ -60,6 +60,26 @@ func Commands() []*cli.Command {
 					Name:  "scopes",
 					Value: "read,write,follow",
 					Usage: "app permissions",
+				},
+			},
+		},
+		// List registered app connections
+		{
+			Name:    "list-connections",
+			Aliases: []string{"lc"},
+			Usage:   "List the registered connections",
+			Action:  listAllApps,
+		},
+		// Remove registered app connection
+		{
+			Name:    "remove-connection",
+			Aliases: []string{"rc"},
+			Usage:   "Remove a registered connection",
+			Action:  removeApp,
+			Flags: []cli.Flag{
+				&cli.StringFlag{
+					Name:  "name",
+					Usage: "client name (e.g. my-cool-app)",
 				},
 			},
 		},

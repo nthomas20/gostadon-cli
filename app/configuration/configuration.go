@@ -1,6 +1,7 @@
 package configuration
 
 import (
+	"errors"
 	"io/ioutil"
 	"log"
 	"os"
@@ -32,7 +33,7 @@ func NewConfiguration() *models.Configuration {
 }
 
 // ReadConfiguration : Read a Configuration into a structure
-func ReadConfiguration(config *models.Configuration) {
+func ReadConfiguration(config *models.Configuration) error {
 	var (
 		validConfiguration = true
 	)
@@ -57,12 +58,14 @@ func ReadConfiguration(config *models.Configuration) {
 	}
 
 	if validConfiguration == false {
-		log.Fatal("Invalid configuration")
+		return errors.New("Invalid Configuration")
 	}
+
+	return nil
 }
 
 // WriteConfiguration : Write a Configuration structure to disk
-func WriteConfiguration(config *models.Configuration) {
+func WriteConfiguration(config *models.Configuration) error {
 	configFile := bootstrap.ConfigDirectory + configFilename
 
 	fileBytes, err := yaml.Marshal(config)
@@ -71,6 +74,9 @@ func WriteConfiguration(config *models.Configuration) {
 		log.Fatal("Could not convert configuration structure")
 	}
 
-	ioutil.WriteFile(configFile, fileBytes, os.ModePerm)
+	if err := ioutil.WriteFile(configFile, fileBytes, os.ModePerm); err != nil {
+		return err
+	}
 
+	return nil
 }
