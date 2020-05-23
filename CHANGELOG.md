@@ -2,6 +2,8 @@
 ## [Unreleased]
 
 ### Features
+- **config:** Default base configuration
+- **config:** Increment mastadon connection postfix if duplicate
 - **config:** Read and Write configuration yaml
 
 
