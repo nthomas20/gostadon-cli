@@ -42,7 +42,7 @@ func Configure(filename string, maxFiles int, maxBytes int64, prefix string, fla
 	var (
 		returnLogger *log.Logger
 		err          error
-		flags        = log.LstdFlags
+		flags        = 0
 	)
 
 	rotateSignal := make(chan bool, 1)
@@ -53,7 +53,7 @@ func Configure(filename string, maxFiles int, maxBytes int64, prefix string, fla
 	}
 
 	if logWriter, err := rotatewriter.NewRotateWriter(filename, maxFiles); err == nil {
-		returnLogger = log.New(logWriter, prefix, flags|log.LUTC)
+		returnLogger = log.New(logWriter, prefix, flags)
 		go rotateLog(logWriter, rotateSignal)
 		go checkLogFileSize(logWriter, maxBytes, rotateSignal)
 	}

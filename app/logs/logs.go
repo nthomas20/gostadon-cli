@@ -44,15 +44,24 @@ func logInt64Conv(s string, n string) int64 {
 	return i
 }
 
-// StartLogging : Start the logging for a particular log
-func StartLogging(name string, filename string, maxFilesString string, maxBytesString string) *log.Logger {
-	maxFiles := logInt64Conv(maxFilesString, name+"_LOG_ROTATE_MAX_FILES")
-	maxBytes := logInt64Conv(maxBytesString, name+"_LOG_ROTATE_BYTES")
+// StartLogging : Start up and return a logger
+func StartLogging(n string, filename string, maxFilesString string, maxBytesString string, flagOptional ...int) *log.Logger {
+	var (
+		flags = 0
+	)
 
-	logger, err := writer.Configure(filename, int(maxFiles), maxBytes, "")
+	maxFiles := logInt64Conv(maxFilesString, n+"_LOG_ROTATE_MAX_FILES")
+	maxBytes := logInt64Conv(maxBytesString, n+"_LOG_ROTATE_BYTES")
+
+	// We'll take an optional log flags parameter
+	if len(flagOptional) > 0 && flagOptional[0] != 0 {
+		flags = flagOptional[0]
+	}
+
+	logger, err := writer.Configure(filename, int(maxFiles), maxBytes, "", flags)
 
 	if err != nil {
-		fmt.Println("ERROR WITH ", name, " LOGGING:", err)
+		fmt.Println("ERROR WITH ", n, " LOGGING:", err)
 		os.Exit(1)
 	}
 

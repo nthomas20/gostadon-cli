@@ -9,7 +9,6 @@ import (
 
 	"github.com/nthomas20/gostadon-cli/app/bootstrap"
 	"github.com/nthomas20/gostadon-cli/app/cmd"
-	"github.com/nthomas20/gostadon-cli/app/models"
 
 	"github.com/urfave/cli/v2"
 )
@@ -17,7 +16,7 @@ import (
 var (
 	version   string
 	buildDate string
-	config    models.Configuration
+	config    = configuration.NewConfiguration()
 )
 
 // TODO: Check for SNAP_REVISION and SNAP_VERSION envvar to manage version output
@@ -25,7 +24,7 @@ var (
 func main() {
 	// Bootstrap Configuration
 	bootstrap.SetupConfiguration()
-	configuration.ReadConfiguration(&config)
+	configuration.ReadConfiguration(config)
 
 	// Setup command routes
 	commands := append(cmd.Commands(), &cli.Command{

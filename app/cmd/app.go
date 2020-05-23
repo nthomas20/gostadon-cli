@@ -23,14 +23,14 @@ var (
 
 func storeConfiguration(app models.MastodonApplicationConfiguration) {
 	var (
-		config models.Configuration
+		config = configuration.NewConfiguration()
 		name   = app.Name
 		found  bool
 		c      = 1
 	)
 
 	// Load our configuration file
-	configuration.ReadConfiguration(&config)
+	configuration.ReadConfiguration(config)
 
 	// Make sure we're not overwriting an existing entry
 	for {
@@ -52,7 +52,7 @@ func storeConfiguration(app models.MastodonApplicationConfiguration) {
 
 	config.MastodonClient[name] = app
 
-	configuration.WriteConfiguration(&config)
+	configuration.WriteConfiguration(config)
 }
 
 func register(c *cli.Context) error {

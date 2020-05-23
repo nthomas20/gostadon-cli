@@ -4,6 +4,7 @@ package models
 // Revision 1
 type Configuration struct {
 	Revision       int                                         `json:"revision"`
+	Logging        map[string]LogConfiguration                 `json:"logging"`
 	MastodonClient map[string]MastodonApplicationConfiguration `json:"mastodon_client"`
 }
 
@@ -20,4 +21,11 @@ type MastodonApplicationConfiguration struct {
 type MastadonClientConfiguration struct {
 	ID     string `json:"id"`
 	Secret string `json:"secret"`
+}
+
+// LogConfiguration : Log Configuration
+type LogConfiguration struct {
+	Filename string `json:"filename"`
+	MaxBytes int64  `json:"max_bytes"`
+	MaxFiles int    `json:"max_files"`
 }

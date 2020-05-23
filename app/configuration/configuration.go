@@ -15,6 +15,22 @@ var (
 	configFilename = "/config.yaml"
 )
 
+// NewConfiguration : Generate a New Configuration file with filled in defaults
+func NewConfiguration() *models.Configuration {
+	config := models.Configuration{
+		Revision: 1,
+		Logging: map[string]models.LogConfiguration{
+			"app": models.LogConfiguration{
+				Filename: "gostadon.log",
+				MaxBytes: 1000000,
+				MaxFiles: 3,
+			},
+		},
+	}
+
+	return &config
+}
+
 // ReadConfiguration : Read a Configuration into a structure
 func ReadConfiguration(config *models.Configuration) {
 	var (
