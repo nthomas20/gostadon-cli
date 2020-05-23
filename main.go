@@ -5,7 +5,11 @@ import (
 	"log"
 	"os"
 
+	"github.com/nthomas20/gostadon-cli/app/configuration"
+
+	"github.com/nthomas20/gostadon-cli/app/bootstrap"
 	"github.com/nthomas20/gostadon-cli/app/cmd"
+	"github.com/nthomas20/gostadon-cli/app/models"
 
 	"github.com/urfave/cli/v2"
 )
@@ -13,11 +17,17 @@ import (
 var (
 	version   string
 	buildDate string
+	config    models.Configuration
 )
 
 // TODO: Check for SNAP_REVISION and SNAP_VERSION envvar to manage version output
 
 func main() {
+	// Bootstrap Configuration
+	bootstrap.SetupConfiguration()
+	configuration.ReadConfiguration(&config)
+
+	// Setup command routes
 	commands := append(cmd.Commands(), &cli.Command{
 		Name:    "version",
 		Aliases: []string{"v"},
@@ -29,6 +39,7 @@ func main() {
 		},
 	})
 
+	// Configure application
 	app := &cli.App{
 		Name:  "gostadon-cli",
 		Usage: "Mastadon CLI Client (written in Go)",
@@ -39,6 +50,7 @@ func main() {
 		Commands: commands,
 	}
 
+	// Run the app
 	err := app.Run(os.Args)
 	if err != nil {
 		log.Fatal(err)

@@ -2,9 +2,12 @@ package cmd
 
 import (
 	"context"
-	"fmt"
 	"log"
 	"strings"
+
+	"github.com/nthomas20/gostadon-cli/app/configuration"
+
+	"github.com/nthomas20/gostadon-cli/app/models"
 
 	jsoniter "github.com/json-iterator/go"
 	"github.com/mattn/go-mastodon"
@@ -15,16 +18,23 @@ var (
 	json = jsoniter.ConfigCompatibleWithStandardLibrary
 )
 
-func storeConfiguration(config ApplicationConfiguration) {
-	jsonResponse, _ := json.Marshal(config)
+// TODO: Check for 'name' already set in configuration
 
-	// Output the entirety of information
-	// TODO: Store this in a local configuration file?
-	fmt.Println(string(jsonResponse))
+func storeConfiguration(app models.MastodonApplicationConfiguration) {
+	var (
+		config models.Configuration
+	)
+
+	// Load our configuration file
+	configuration.ReadConfiguration(&config)
+
+	config.MastodonClient[app.Name] = app
+
+	configuration.WriteConfiguration(&config)
 }
 
 func register(c *cli.Context) error {
-	config := ApplicationConfiguration{
+	config := models.MastodonApplicationConfiguration{
 		ServerDomain: c.String("server"),
 		Name:         c.String("name"),
 		Scopes:       strings.Split(c.String("scopes"), ","),
@@ -51,11 +61,11 @@ func register(c *cli.Context) error {
 }
 
 func connect(c *cli.Context) error {
-	config := ApplicationConfiguration{
+	config := models.MastodonApplicationConfiguration{
 		ServerDomain: c.String("server"),
 		Name:         c.String("name"),
 		Scopes:       strings.Split(c.String("scopes"), ","),
-		Client: ClientConfiguration{
+		Client: models.MastadonClientConfiguration{
 			ID:     c.String("client_id"),
 			Secret: c.String("client_secret"),
 		},
