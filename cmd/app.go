@@ -13,6 +13,7 @@ import (
 
 	jsoniter "github.com/json-iterator/go"
 	"github.com/mattn/go-mastodon"
+	"github.com/skratchdot/open-golang/open"
 	"github.com/urfave/cli/v2"
 )
 
@@ -50,6 +51,10 @@ func storeConfiguration(app configapp.ApplicationConfiguration) error {
 		}
 	}
 
+	if config.Apps == nil {
+		config.Apps = make(map[string]configapp.ApplicationConfiguration)
+	}
+
 	// Update the configuration and write it
 	config.Apps[name] = app
 	if err := configapp.WriteConfiguration(config); err != nil {
@@ -73,6 +78,8 @@ func registerApp(c *cli.Context) error {
 		Website: c.String("website"),
 	}
 
+	// Check for app name first
+
 	// Contact Mastadon to configure application
 	app, err := mastodon.RegisterApp(context.Background(), &mastodon.AppConfig{
 		Server:     config.Server,
@@ -90,10 +97,14 @@ func registerApp(c *cli.Context) error {
 	config.Client.Secret = app.ClientSecret
 	config.Client.RedirectURI = app.RedirectURI
 
-	fmt.Println(app)
-
 	if err := storeConfiguration(config); err != nil {
 		log.Fatal(err)
+	}
+
+	// Open a web browser to accept authorization
+	if err := open.Run(app.AuthURI); err != nil {
+		fmt.Println("Unable to open web browser, visit the following link to authorize account access")
+		fmt.Println(app.AuthURI)
 	}
 
 	return nil
@@ -112,6 +123,19 @@ func connectApp(c *cli.Context) error {
 			Token:       c.String("token"),
 			RedirectURI: c.String("redir_uri"),
 		},
+	}
+
+	// Make network client connection to app
+	client := mastodon.NewClient(&mastodon.Config{
+		Server:       config.Server,
+		ClientID:     config.Client.ID,
+		ClientSecret: config.Client.Secret,
+		// AccessToken:  config.Client.Token,
+	})
+
+	if err := client.AuthenticateToken(context.Background(), config.Client.Token, config.Client.RedirectURI); err != nil {
+		// If err, then don't add account and exit with err
+		return err
 	}
 
 	// Write it

@@ -44,6 +44,10 @@ func send(c *cli.Context) error {
 		AccessToken:  config.Apps[app].Client.Token,
 	})
 
+	// TODO: Check response from AuthenticateToken, we're using it twice here, and that seems not right.
+	// I think that we use the client.token from the webpage response IN the AuthenticateToken and then we should receive an access token that gets stored back with the client
+	// At that point, we shouldn't need to authenticate token again and just use the client configuration with newclient and provided accesstoken.
+
 	if err := client.AuthenticateToken(context.Background(), config.Apps[app].Client.Token, config.Apps[app].Client.RedirectURI); err != nil {
 		// If err, then don't add account and exit with err
 		return err
@@ -56,10 +60,10 @@ func send(c *cli.Context) error {
 	fmt.Println("-------------")
 	fmt.Println(client)
 
-	convo, err := client.GetConversations(context.Background(), nil)
+	// convo, err := client.GetConversations(context.Background(), nil)
 
-	fmt.Println(err)
-	fmt.Println(convo)
+	// fmt.Println(err)
+	// fmt.Println(convo)
 
 	return nil
 }
