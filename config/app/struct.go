@@ -10,12 +10,12 @@ type Configuration struct {
 
 // ApplicationConfiguration : Application Configuration Information
 type ApplicationConfiguration struct {
-	ServerDomain string                         `json:"server"`
-	Name         string                         `json:"name"`
-	Type         string                         `json:"type"`
-	Scopes       []string                       `json:"scopes"`
-	Website      string                         `json:"website"`
-	Client       ApplicationClientConfiguration `json:"client"`
+	Server  string                         `json:"server"`
+	Name    string                         `json:"name"`
+	Type    string                         `json:"type"`
+	Scopes  []string                       `json:"scopes"`
+	Website string                         `json:"website"`
+	Client  ApplicationClientConfiguration `json:"client"`
 }
 
 // ApplicationClientConfiguration : Client Configuration Information

@@ -9,7 +9,7 @@ import (
 	"gopkg.in/yaml.v2"
 )
 
-var (
+const (
 	profileFilename = "/accounts.yaml"
 )
 

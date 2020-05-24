@@ -67,17 +67,17 @@ func storeConfiguration(app configapp.ApplicationConfiguration) error {
 func registerApp(c *cli.Context) error {
 	// Create Application Configuration with provided CLI switches
 	config := configapp.ApplicationConfiguration{
-		ServerDomain: c.String("server"),
-		Name:         c.String("name"),
-		Scopes:       strings.Split(c.String("scopes"), ","),
-		Website:      c.String("website"),
+		Server:  c.String("server"),
+		Name:    c.String("name"),
+		Scopes:  strings.Split(c.String("scopes"), ","),
+		Website: c.String("website"),
 	}
 
 	// Contact Mastadon to configure application
 	app, err := mastodon.RegisterApp(context.Background(), &mastodon.AppConfig{
-		Server:     config.ServerDomain,
+		Server:     config.Server,
 		ClientName: config.Name,
-		Scopes:     strings.Join(config.Scopes, ","),
+		Scopes:     strings.Join(config.Scopes, " "),
 		Website:    config.Website,
 	})
 
@@ -88,6 +88,10 @@ func registerApp(c *cli.Context) error {
 	// Update Application Configuration and write it
 	config.Client.ID = app.ClientID
 	config.Client.Secret = app.ClientSecret
+	config.Client.RedirectURI = app.RedirectURI
+
+	fmt.Println(app)
+
 	if err := storeConfiguration(config); err != nil {
 		log.Fatal(err)
 	}
@@ -98,12 +102,15 @@ func registerApp(c *cli.Context) error {
 func connectApp(c *cli.Context) error {
 	// Create Application Configuration with provided CLI switches
 	config := configapp.ApplicationConfiguration{
-		ServerDomain: c.String("server"),
-		Name:         c.String("name"),
-		Scopes:       strings.Split(c.String("scopes"), ","),
+		Server: c.String("server"),
+		Name:   c.String("name"),
+		Type:   "mastodon",
+		Scopes: strings.Split(c.String("scopes"), ","),
 		Client: configapp.ApplicationClientConfiguration{
-			ID:     c.String("client_id"),
-			Secret: c.String("client_secret"),
+			ID:          c.String("client_id"),
+			Secret:      c.String("client_secret"),
+			Token:       c.String("token"),
+			RedirectURI: c.String("redir_uri"),
 		},
 	}
 
@@ -140,7 +147,7 @@ func listAllApps(c *cli.Context) error {
 	return nil
 }
 
-func removeApp(c *cli.Context) error {
+func deleteApp(c *cli.Context) error {
 	var (
 		config = configapp.NewConfiguration()
 		name   = c.String("name")
@@ -166,3 +173,4 @@ func removeApp(c *cli.Context) error {
 }
 
 // {"server":"https://mastodon.social","app_name":"my-cool-app","scopes":["read","write","follow"],"website":"https://google.com","client":{"id":"pxshMy-ujcaH4bQEPfImCgYmOOzsI_FE-_0kyFhx8eA","secret":"XIQZlN2gFYO3-rsEn682rXDCnKcz-McPHaox2zMrpSM"}}
+// go run main.go ca --server https://mastodon.social --name gostadon-dev --client_id jCDQlOhiaFHLs99kpMHu6E1QcAVSe5597fecpK1HYGU --client_secret phSq7EIsdRzkkAK_GCMtlH4vyHFsGE8P_ZG_fPlHKDE --token l0OulIzOd3MDbupY_fRGmDfryhdJHKHU3vYDEhOoWQ8

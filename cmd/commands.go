@@ -10,7 +10,7 @@ func Commands() []*cli.Command {
 		// Register new app
 		{
 			Name:    "register-app",
-			Aliases: []string{"rp"},
+			Aliases: []string{"ra"},
 			Usage:   "Register a new app with Mastodon",
 			Action:  registerApp,
 			Flags: []cli.Flag{
@@ -36,7 +36,7 @@ func Commands() []*cli.Command {
 		// Connect existing app
 		{
 			Name:    "connect-app",
-			Aliases: []string{"cp"},
+			Aliases: []string{"ca"},
 			Usage:   "Connect an existing app with Mastodon",
 			Action:  connectApp,
 			Flags: []cli.Flag{
@@ -61,21 +61,30 @@ func Commands() []*cli.Command {
 					Value: "read,write,follow",
 					Usage: "app permissions",
 				},
+				&cli.StringFlag{
+					Name:  "redir_uri",
+					Value: "urn:ietf:wg:oauth:2.0:oob",
+					Usage: "redirect uri",
+				},
+				&cli.StringFlag{
+					Name:  "token",
+					Usage: "token",
+				},
 			},
 		},
 		// List registered app connections
 		{
-			Name:    "list-connections",
-			Aliases: []string{"lc"},
-			Usage:   "List the registered connections",
+			Name:    "list-apps",
+			Aliases: []string{"la"},
+			Usage:   "List the registered apps",
 			Action:  listAllApps,
 		},
 		// Remove registered app connection
 		{
-			Name:    "remove-connection",
-			Aliases: []string{"rc"},
-			Usage:   "Remove a registered connection",
-			Action:  removeApp,
+			Name:    "delete-app",
+			Aliases: []string{"da"},
+			Usage:   "Delete a registered app",
+			Action:  deleteApp,
 			Flags: []cli.Flag{
 				&cli.StringFlag{
 					Name:  "name",
@@ -119,12 +128,37 @@ func Commands() []*cli.Command {
 		{
 			Name:    "remove-account",
 			Aliases: []string{"ra"},
-			Usage:   "Remove an  account",
+			Usage:   "Remove an account",
 			// Action: removeAccount,
 			Flags: []cli.Flag{
 				&cli.StringFlag{
 					Name:  "profile",
-					Usage: "profile name (e.g. profile)",
+					Usage: "profile name (e.g. account-cred-profile)",
+				},
+			},
+		},
+		// Send Unencrypted Message
+		{
+			Name:    "send",
+			Aliases: []string{"s"},
+			Usage:   "Send an UNENCRYPTED message",
+			Action:  send,
+			Flags: []cli.Flag{
+				&cli.StringFlag{
+					Name:  "app",
+					Usage: "Name of the registered app (e.g. my-cool-app)",
+				},
+				&cli.StringFlag{
+					Name:  "to",
+					Usage: "to whom (e.g. @username@mastodon.social)",
+				},
+				&cli.StringFlag{
+					Name:  "from",
+					Usage: "from profile (e.g. account-cred-profile)",
+				},
+				&cli.StringFlag{
+					Name:  "message",
+					Usage: "Message text",
 				},
 			},
 		},
