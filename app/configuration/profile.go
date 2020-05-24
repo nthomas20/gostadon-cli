@@ -16,7 +16,9 @@ var (
 
 // NewAccountConfiguration : Generate a New Profile
 func NewAccountConfiguration() *models.AccountConfiguration {
-	profiles := models.AccountConfiguration{}
+	profiles := models.AccountConfiguration{
+		Profiles: make(map[string]models.ProfileConfiguration),
+	}
 
 	return &profiles
 }
