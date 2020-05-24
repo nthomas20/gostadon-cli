@@ -1,26 +1,29 @@
 package models
 
-// Configuration : Application Configuration File Sructure
+// MainConfiguration : Application Configuration File Sructure
 // Revision 1
-type Configuration struct {
-	Revision       int                                         `json:"revision"`
-	Logging        map[string]LogConfiguration                 `json:"logging"`
-	MastodonClient map[string]MastodonApplicationConfiguration `json:"mastodon_client"`
+type MainConfiguration struct {
+	Revision int                                 `json:"revision"`
+	Logging  map[string]LogConfiguration         `json:"logging"`
+	Client   map[string]ApplicationConfiguration `json:"client"`
 }
 
-// MastodonApplicationConfiguration : Application Configuration Information
-type MastodonApplicationConfiguration struct {
-	ServerDomain string                      `json:"server"`
-	Name         string                      `json:"app_name"`
-	Scopes       []string                    `json:"scopes"`
-	Website      string                      `json:"website"`
-	Client       MastadonClientConfiguration `json:"client"`
+// ApplicationConfiguration : Application Configuration Information
+type ApplicationConfiguration struct {
+	ServerDomain string                         `json:"server"`
+	Name         string                         `json:"name"`
+	Type         string                         `json:"type"`
+	Scopes       []string                       `json:"scopes"`
+	Website      string                         `json:"website"`
+	Client       ApplicationClientConfiguration `json:"client"`
 }
 
-// MastadonClientConfiguration : Client Configuration Information
-type MastadonClientConfiguration struct {
-	ID     string `json:"id"`
-	Secret string `json:"secret"`
+// ApplicationClientConfiguration : Client Configuration Information
+type ApplicationClientConfiguration struct {
+	ID          string `json:"id"`
+	Secret      string `json:"secret"`
+	Token       string `json:"token"`
+	RedirectURI string `json:"redirect_uri"`
 }
 
 // LogConfiguration : Log Configuration
