@@ -1,4 +1,4 @@
-package logs
+package logging
 
 import (
 	"fmt"
@@ -6,7 +6,7 @@ import (
 	"os"
 	"strconv"
 
-	"github.com/nthomas20/gostadon-cli/app/logs/writer"
+	"github.com/nthomas20/gostadon-cli/logging/writer"
 
 	jsoniter "github.com/json-iterator/go"
 )

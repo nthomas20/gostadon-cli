@@ -9,9 +9,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/nthomas20/gostadon-cli/app/configuration"
-
-	"github.com/nthomas20/gostadon-cli/app/models"
+	configapp "github.com/nthomas20/gostadon-cli/config/app"
 
 	jsoniter "github.com/json-iterator/go"
 	"github.com/mattn/go-mastodon"
@@ -24,21 +22,21 @@ var (
 
 // TODO: Check for 'name' already set in configuration
 
-func storeConfiguration(app models.MastodonApplicationConfiguration) error {
+func storeConfiguration(app configapp.ApplicationConfiguration) error {
 	var (
-		config = configuration.NewConfiguration()
+		config = configapp.NewConfiguration()
 		name   = app.Name
 		found  bool
 		c      = 1
 	)
 
 	// Load our configuration file
-	configuration.ReadConfiguration(config)
+	configapp.ReadConfiguration(config)
 
 	// Make sure we're not overwriting an existing entry
 	for {
 		// Check for existing stored name
-		_, found = config.MastodonClient[name]
+		_, found = config.Apps[name]
 
 		// If it exists, increment by 1 and continue
 		if found == true {
@@ -53,8 +51,8 @@ func storeConfiguration(app models.MastodonApplicationConfiguration) error {
 	}
 
 	// Update the configuration and write it
-	config.MastodonClient[name] = app
-	if err := configuration.WriteConfiguration(config); err != nil {
+	config.Apps[name] = app
+	if err := configapp.WriteConfiguration(config); err != nil {
 		return err
 	}
 
@@ -68,7 +66,7 @@ func storeConfiguration(app models.MastodonApplicationConfiguration) error {
 
 func registerApp(c *cli.Context) error {
 	// Create Application Configuration with provided CLI switches
-	config := models.MastodonApplicationConfiguration{
+	config := configapp.ApplicationConfiguration{
 		ServerDomain: c.String("server"),
 		Name:         c.String("name"),
 		Scopes:       strings.Split(c.String("scopes"), ","),
@@ -99,11 +97,11 @@ func registerApp(c *cli.Context) error {
 
 func connectApp(c *cli.Context) error {
 	// Create Application Configuration with provided CLI switches
-	config := models.MastodonApplicationConfiguration{
+	config := configapp.ApplicationConfiguration{
 		ServerDomain: c.String("server"),
 		Name:         c.String("name"),
 		Scopes:       strings.Split(c.String("scopes"), ","),
-		Client: models.MastadonClientConfiguration{
+		Client: configapp.ApplicationClientConfiguration{
 			ID:     c.String("client_id"),
 			Secret: c.String("client_secret"),
 		},
@@ -119,15 +117,15 @@ func connectApp(c *cli.Context) error {
 
 func listAllApps(c *cli.Context) error {
 	var (
-		config = configuration.NewConfiguration()
+		config = configapp.NewConfiguration()
 		names  = []string{}
 	)
 
 	// Load our configuration file
-	configuration.ReadConfiguration(config)
+	configapp.ReadConfiguration(config)
 
 	// Create a slice of all of the names in the configuration
-	for conn := range config.MastodonClient {
+	for conn := range config.Apps {
 		names = append(names, conn)
 	}
 
@@ -144,20 +142,20 @@ func listAllApps(c *cli.Context) error {
 
 func removeApp(c *cli.Context) error {
 	var (
-		config = configuration.NewConfiguration()
+		config = configapp.NewConfiguration()
 		name   = c.String("name")
 	)
 
 	// Load our configuration file
-	configuration.ReadConfiguration(config)
+	configapp.ReadConfiguration(config)
 
 	// Does the requested name exist in the config
-	if _, found := config.MastodonClient[name]; found == true {
+	if _, found := config.Apps[name]; found == true {
 		// Delete it
-		delete(config.MastodonClient, name)
+		delete(config.Apps, name)
 
 		// Write the configuration
-		if err := configuration.WriteConfiguration(config); err != nil {
+		if err := configapp.WriteConfiguration(config); err != nil {
 			return err
 		}
 	} else {

@@ -12,12 +12,12 @@ var (
 	ConfigDirectory string
 )
 
-// SetupConfiguration : Make sure our main configuration directory is set
-func SetupConfiguration() {
+// Run : Run bootstrap house-keeping
+func Run() {
 	// Get the home directory
-	homeDirectory, _ := os.UserHomeDir()
+	HomeDirectory, _ = os.UserHomeDir()
 
-	ConfigDirectory = homeDirectory + "/.gostadon"
+	ConfigDirectory = HomeDirectory + "/.gostadon"
 
 	_, err := os.Stat(ConfigDirectory)
 	if os.IsNotExist(err) {

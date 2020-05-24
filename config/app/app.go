@@ -1,4 +1,4 @@
-package configuration
+package configapp
 
 import (
 	"errors"
@@ -6,8 +6,7 @@ import (
 	"log"
 	"os"
 
-	"github.com/nthomas20/gostadon-cli/app/bootstrap"
-	"github.com/nthomas20/gostadon-cli/app/models"
+	"github.com/nthomas20/gostadon-cli/bootstrap"
 
 	"gopkg.in/yaml.v2"
 )
@@ -17,11 +16,11 @@ var (
 )
 
 // NewConfiguration : Generate a New Configuration file with filled in defaults
-func NewConfiguration() *models.Configuration {
-	config := models.Configuration{
+func NewConfiguration() *Configuration {
+	config := Configuration{
 		Revision: 1,
-		Logging: map[string]models.LogConfiguration{
-			"app": models.LogConfiguration{
+		Logging: map[string]LogConfiguration{
+			"app": LogConfiguration{
 				Filename: "gostadon.log",
 				MaxBytes: 1000000,
 				MaxFiles: 3,
@@ -33,7 +32,7 @@ func NewConfiguration() *models.Configuration {
 }
 
 // ReadConfiguration : Read a Configuration into a structure
-func ReadConfiguration(config *models.Configuration) error {
+func ReadConfiguration(config *Configuration) error {
 	var (
 		validConfiguration = true
 	)
@@ -44,7 +43,7 @@ func ReadConfiguration(config *models.Configuration) error {
 	if err != nil {
 		// Create blank config
 		config.Revision = 1
-		config.MastodonClient = make(map[string]models.MastodonApplicationConfiguration)
+		config.Apps = make(map[string]ApplicationConfiguration)
 
 		// Store our new configuration!
 		WriteConfiguration(config)
@@ -65,7 +64,7 @@ func ReadConfiguration(config *models.Configuration) error {
 }
 
 // WriteConfiguration : Write a Configuration structure to disk
-func WriteConfiguration(config *models.Configuration) error {
+func WriteConfiguration(config *Configuration) error {
 	configFile := bootstrap.ConfigDirectory + configFilename
 
 	fileBytes, err := yaml.Marshal(config)

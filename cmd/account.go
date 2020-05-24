@@ -3,9 +3,8 @@ package cmd
 import (
 	"errors"
 
-	"github.com/nthomas20/gostadon-cli/app/models"
-
-	"github.com/nthomas20/gostadon-cli/app/configuration"
+	configaccount "github.com/nthomas20/gostadon-cli/config/account"
+	configapp "github.com/nthomas20/gostadon-cli/config/app"
 	"github.com/urfave/cli/v2"
 )
 
@@ -13,8 +12,8 @@ import (
 
 func addAccount(c *cli.Context) error {
 	var (
-		config   = configuration.NewConfiguration()
-		profiles = configuration.NewAccountConfiguration()
+		config   = configapp.NewConfiguration()
+		accounts = configaccount.NewConfiguration()
 		app      = c.String("app")
 		profile  = c.String("profile")
 		email    = c.String("email")
@@ -22,39 +21,27 @@ func addAccount(c *cli.Context) error {
 	)
 
 	// Check if the profile already exists, if it does then quit
-	configuration.ReadProfiles(profiles)
+	configaccount.ReadConfiguration(accounts)
 
 	// Load our configuration file
-	configuration.ReadConfiguration(config)
+	configapp.ReadConfiguration(config)
 
 	// Does the requested app exist in the config
-	if _, found := config.MastodonClient[app]; found == false {
+	if _, found := config.Apps[app]; found == false {
 		return errors.New("Invalid app. list-connections to list all app connections")
 	}
 
-	/*
-		// Make network client connection to app
-		client := mastodon.NewClient(&mastodon.Config{
-			Server:       config.MastodonClient[app].ServerDomain,
-			ClientID:     config.MastodonClient[app].Client.ID,
-			ClientSecret: config.MastodonClient[app].Client.Secret,
-		})
-
-		// call Authenticate() on client configuration
-		if err := client.Authenticate(context.Background(), email, password); err != nil {
-			// If err, then don't add account and exit with err
-			return err
-		}
-	*/
+	// Make network client connection to app
+	// Authenticate client configuration
 
 	// Add account profile to configuration
-	profiles.Profiles[profile] = models.ProfileConfiguration{
+	accounts.Profiles[profile] = configaccount.ProfileConfiguration{
 		Email:    email,
 		Password: password,
 	}
 
 	// Save It!
-	configuration.WriteProfiles(profiles)
+	configaccount.WriteConfiguration(accounts)
 
 	return nil
 }
