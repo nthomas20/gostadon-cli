@@ -11,7 +11,7 @@ func Commands() []*cli.Command {
 		{
 			Name:    "register-app",
 			Aliases: []string{"ra"},
-			Usage:   "Register a new app with Mastodon",
+			Usage:   "Register a new app",
 			Action:  registerApp,
 			Flags: []cli.Flag{
 				&cli.StringFlag{
@@ -28,7 +28,7 @@ func Commands() []*cli.Command {
 				},
 				&cli.StringFlag{
 					Name:  "scopes",
-					Value: "read,write,follow",
+					Value: "read,write,follow,push",
 					Usage: "app permissions",
 				},
 			},
@@ -37,7 +37,7 @@ func Commands() []*cli.Command {
 		{
 			Name:    "connect-app",
 			Aliases: []string{"ca"},
-			Usage:   "Connect an existing app with Mastodon",
+			Usage:   "Connect an existing app",
 			Action:  connectApp,
 			Flags: []cli.Flag{
 				&cli.StringFlag{
@@ -58,7 +58,7 @@ func Commands() []*cli.Command {
 				},
 				&cli.StringFlag{
 					Name:  "scopes",
-					Value: "read,write,follow",
+					Value: "read,write,follow,push",
 					Usage: "app permissions",
 				},
 				&cli.StringFlag{

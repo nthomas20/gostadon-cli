@@ -101,6 +101,8 @@ func registerApp(c *cli.Context) error {
 		log.Fatal(err)
 	}
 
+	fmt.Println(app)
+
 	// Open a web browser to accept authorization
 	if err := open.Run(app.AuthURI); err != nil {
 		fmt.Println("Unable to open web browser, visit the following link to authorize account access")
@@ -120,22 +122,9 @@ func connectApp(c *cli.Context) error {
 		Client: configapp.ApplicationClientConfiguration{
 			ID:          c.String("client_id"),
 			Secret:      c.String("client_secret"),
-			Token:       c.String("token"),
 			RedirectURI: c.String("redir_uri"),
+			Token:       c.String("token"),
 		},
-	}
-
-	// Make network client connection to app
-	client := mastodon.NewClient(&mastodon.Config{
-		Server:       config.Server,
-		ClientID:     config.Client.ID,
-		ClientSecret: config.Client.Secret,
-		// AccessToken:  config.Client.Token,
-	})
-
-	if err := client.AuthenticateToken(context.Background(), config.Client.Token, config.Client.RedirectURI); err != nil {
-		// If err, then don't add account and exit with err
-		return err
 	}
 
 	// Write it
