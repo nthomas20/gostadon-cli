@@ -4,8 +4,8 @@ silent: false
 branchName: short
 branches:
     - label: enhancement
-      name: master
+      name: main
     - label: bug
-      name: master
+      name: main
     - label: '*'
-      name: master
+      name: main
