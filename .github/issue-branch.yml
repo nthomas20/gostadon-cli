@@ -3,9 +3,13 @@ mode: auto
 silent: false
 branchName: short
 branches:
-    - label: enhancement
+    - label: Type:Enhancement
       name: main
-    - label: bug
+    - label: Type:Bug
       name: main
+    - label: Type:Documentation
+      name: main
+    - label: Type:Question
+      skip: true
     - label: '*'
       name: main
