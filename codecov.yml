@@ -1,0 +1,3 @@
+# Test validity of this file by executing this command: curl --data-binary @codecov.yml https://codecov.io/validate
+ignore:
+    - "**/mock_*.go"
