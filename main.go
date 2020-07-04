@@ -42,7 +42,7 @@ func main() {
 		Name:  "gostadon-cli",
 		Usage: "Mastadon CLI Client (written in Go)",
 		Action: func(c *cli.Context) error {
-			fmt.Println("No action specified. #cry")
+			fmt.Println("No action specified (-h for help). #cry")
 			return nil
 		},
 		Commands: commands,
