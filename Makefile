@@ -19,6 +19,22 @@ LDFLAGS=-ldflags "-w -s -X main.version=${VERSION} -X main.buildDate=${BUILD}"
 LDFLAGS_SNAP=-ldflags "-w -s -X main.version=${VERSION}-snap -X main.buildDate=${BUILD}"
 LDFLAGS_HERE=-ldflags "-w -s -X main.version=${VERSION}-local -X main.buildDate=${BUILD}"
 
+COVERAGEFLAGS=-race -coverprofile=coverage.txt -covermode=atomic -v
+COVERAGE_TOKEN = ${CODECOV_TOKEN}
+
+# Tests the project
+test:
+	env GOOS=linux GOARCH=amd64 go test ./... ${LDFLAGS}
+	env GOOS=windows GOARCH=amd64 go test ./... ${LDFLAGS}
+	env GOOS=darwin GOARCH=amd64 go test ./... ${LDFLAGS}
+
+# Tests the project linux-only and upload coverage report
+coverage:
+	@[ "${COVERAGE_TOKEN}" ] && echo "all good" || ( echo "CODECOV_TOKEN is not set"; exit 1 )
+	if [ -f coverage.txt ] ; then rm coverage.txt ; fi
+	env GOOS=linux GOARCH=amd64 go test ./... ${LDFLAGS} ${COVERAGEFLAGS}
+	curl -s https://codecov.io/bash | bash
+
 # Builds the project ( https://www.digitalocean.com/community/tutorials/how-to-build-go-executables-for-multiple-platforms-on-ubuntu-16-04 )
 build:
 	env GOOS=linux GOARCH=amd64 go build ${LDFLAGS} -o bin/${BINARY_LINUX}
@@ -35,6 +51,7 @@ install:
 
 # Cleans our project: deletes binaries
 clean:
+	if [ -f coverage.txt ] ; then rm coverage.txt ; fi
 	if [ -f bin/${BINARY_LINUX} ] ; then rm bin/${BINARY_LINUX} ; fi
 	if [ -f bin/${BINARY_SNAP} ] ; then rm bin/${BINARY_SNAP} ; fi
 	if [ -f bin/${BINARY_WINDOWS} ] ; then rm bin/${BINARY_WINDOWS} ; fi
@@ -44,7 +61,7 @@ clean:
 changelog:
 	git pull
 	git-chglog -o CHANGELOG.md
-	git commit -a -m "changelog"
+	git commit -a -m "update changelog"
 	git push
 	git push origin ${VERSION}
 
